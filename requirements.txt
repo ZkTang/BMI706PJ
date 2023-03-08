@@ -3,4 +3,3 @@ numpy~=1.24.2
 sidetable~=0.9.1
 altair~=4.2.2
 lifelines~=0.27.4
-streamlit~=1.16.0
