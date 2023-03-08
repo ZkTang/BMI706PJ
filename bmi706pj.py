@@ -54,7 +54,7 @@ drug_options = sorted(df_melted_1['regimen_drugs'].unique())
 # )
 drugs_multiselect = st.multiselect('Treatments', drug_options)
 subset_1 = df_melted_1[df_melted_1["regimen_drugs"].isin(drugs_multiselect)]
-chart_0 = alt.Chart(df_melted_1).mark_bar().encode(
+chart_0 = alt.Chart(subset_1).mark_bar().encode(
     x = alt.X('progression_occurred:N', axis= None),
     y = alt.Y('count():Q', axis=alt.Axis(grid=True)),
     color = alt.Color('regimen_drugs:N', legend=alt.Legend(title='Progression Status')),
