@@ -52,9 +52,9 @@ for item in all_drug_list:
     d_list = item.split(", ")
     drug_list += d_list
 drug_list = sorted(list(set(drug_list)))
-drugs_multiselect_1 = st.multiselect('Treatments_1', drug_list)
-drugs_multiselect_2 = st.multiselect('Treatments_2', drug_list)
-drugs_multiselect_3 = st.multiselect('Treatments_3', drug_list)
+drugs_multiselect_1 = st.multiselect('Treatments_1', drug_list, default=['Carboplatin'])
+drugs_multiselect_2 = st.multiselect('Treatments_2', drug_list, default=['Carboplatin', 'Paclitaxel', 'Pembrolizumab'])
+drugs_multiselect_3 = st.multiselect('Treatments_3', drug_list, default=['Cisplatin'])
 
 text_1 = ", ".join(sorted(list(drugs_multiselect_1)))
 text_2 = ", ".join(sorted(list(drugs_multiselect_1)))
@@ -72,6 +72,7 @@ for t in range(1,4):
         st.write(r'There is no record for set' + str(names['text_' + str(t)]))
 
 text_st = [text_all[i] for i in range(len(text_all)) if count_all[i] != 0]
+
 subset_1 = df_melted_1[df_melted_1["regimen_drugs"].isin(text_st)]
 
 drug_options = sorted(df_melted_1['regimen_drugs'].unique())
