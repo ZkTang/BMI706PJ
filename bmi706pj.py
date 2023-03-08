@@ -43,8 +43,37 @@ df_melted_1 = pd.melt(
 df_melted_1["time_till_progression"] = df_melted_1.apply(lambda x: x["tt_pfs_i_g_mos"] if x["progression_type"] == "pfs_i_g_status" else x["tt_pfs_m_g_mos"], axis=1)
 
 df_melted_1.drop(["tt_pfs_i_g_mos", "tt_pfs_m_g_mos"], axis=1, inplace=True)
-
+df_melted_1 = df_melted_1[df_melted_1["progression_occurred"] == 1]
 df_melted_1['progression_type'] = np.where(df_melted_1['progression_type'] == 'pfs_m_g_status', 'Notes Based', 'Imaging Based')
+df_melted_1 = df_melted_1[~df_melted_1['regimen_drugs'].str.contains('Investigational Drug')]
+all_drug_list = df_melted_1['regimen_drugs'].tolist()
+drug_list = []
+for item in all_drug_list:
+    d_list = item.split(", ")
+    drug_list += d_list
+drug_list = sorted(list(set(drug_list)))
+drugs_multiselect_1 = st.multiselect('Treatments_1', drug_list)
+drugs_multiselect_2 = st.multiselect('Treatments_2', drug_list)
+drugs_multiselect_3 = st.multiselect('Treatments_3', drug_list)
+
+text_1 = ", ".join(sorted(list(drugs_multiselect_1)))
+text_2 = ", ".join(sorted(list(drugs_multiselect_1)))
+text_3 = ", ".join(sorted(list(drugs_multiselect_1)))
+
+drug_allselect = list(set(drugs_multiselect_1 + drugs_multiselect_2 + drugs_multiselect_3))
+
+text_all = [text_1,text_2,text_3]
+count_all = [len(df_melted_1[df_melted_1["regimen_drugs"] == item]['record_id'].to_list()) for item in text_all]
+
+names = locals()
+for t in range(1,4):
+    if count_all[t-1] == 0:
+        #print(r'There is no record for set of' + str(names['text_' + str(t)]))
+        st.write(r'There is no record for set' + str(names['text_' + str(t)]))
+
+text_st = [text_all[i] for i in range(len(text_all)) if count_all[i] != 0]
+subset_1 = df_melted_1[df_melted_1["regimen_drugs"].isin(text_st)]
+
 drug_options = sorted(df_melted_1['regimen_drugs'].unique())
 # selection = alt.selection_single(
 #     fields=['regimen_drugs'],
@@ -52,20 +81,39 @@ drug_options = sorted(df_melted_1['regimen_drugs'].unique())
 #                             name='Select Drug Regimen'),
 #      init={'regimen_drugs': 'Docetaxel'}
 # )
-drugs_multiselect = st.multiselect('Treatments', drug_options)
-subset_1 = df_melted_1[df_melted_1["regimen_drugs"].isin(drugs_multiselect)]
-chart_0 = alt.Chart(subset_1).mark_bar().encode(
-    x = alt.X('progression_occurred:N', axis= None),
-    y = alt.Y('count():Q', axis=alt.Axis(grid=True)),
-    color = alt.Color('regimen_drugs:N', legend=alt.Legend(title='Progression Status')),
-    column=alt.Column('progression_type:N')
-).configure_view(
-    stroke='transparent'
-).properties(
-    width=50,
-    height=300,
-    title='Frequency of Progression for each Drug'
+
+survival_dict = {}
+for treatment in text_st:
+    temp_years = df_melted_1[df_melted_1["regimen_drugs"] == treatment]
+    temp_year_list = temp_years['time_till_progression'].tolist()
+    survival_dict[treatment] = temp_year_list
+survival_df = pd.DataFrame(columns=text_st, index=[p for p in range(5000)])
+for name in text_st:
+    survival_df[name] = survival_dict[name] + ['' for g in range((5000-len(survival_dict[name])))]
+
+chart_0 = alt.Chart(survival_df).transform_fold(
+    text_st,
+    as_=['Drugs', 'Time_to_progression']
+).mark_bar(
+    opacity=0.3,
+    binSpacing=0
+).encode(
+    alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100)),
+    alt.Y('count()', stack=None),
+    alt.Color('Drugs:N')
 )
+# chart_0 = alt.Chart.from_dict(survival_df).mark_bar().encode(
+#     x = alt.X('progression_occurred:N', axis= None),
+#     y = alt.Y('count():Q', axis=alt.Axis(grid=True)),
+#     color = alt.Color('regimen_drugs:N', legend=alt.Legend(title='Progression Status')),
+#     column=alt.Column('progression_type:N')
+# ).configure_view(
+#     stroke='transparent'
+# ).properties(
+#     width=50,
+#     height=300,
+#     title='Frequency of Progression for each Drug'
+# )
 
 st.altair_chart(chart_0)
 
