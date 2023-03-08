@@ -9,15 +9,15 @@ import streamlit as st
 
 @st.cache_data
 def load_data():
-    cancer_idx = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/cancer_level_dataset_index.csv")
-    cancer_nonidx = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/cancer_level_dataset_non_index.csv")
-    cancer_panel = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/cancer_panel_test_level_dataset.csv")
-    cancer_imaging = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/imaging_level_dataset.csv")
-    cancer_manifest = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/manifest.csv")
-    cancer_medonc = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/med_onc_note_level_dataset.csv")
-    cancer_path = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/pathology_report_level_dataset.csv")
-    cancer_patientlevel = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/patient_level_dataset.csv")
-    cancer_drugs = pd.read.csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/regimen_cancer_level_dataset.csv")
+    cancer_idx = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/cancer_level_dataset_index.csv")
+    cancer_nonidx = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/cancer_level_dataset_non_index.csv")
+    cancer_panel = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/cancer_panel_test_level_dataset.csv")
+    cancer_imaging = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/imaging_level_dataset.csv")
+    cancer_manifest = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/manifest.csv")
+    cancer_medonc = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/med_onc_note_level_dataset.csv")
+    cancer_path = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/pathology_report_level_dataset.csv")
+    cancer_patientlevel = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/patient_level_dataset.csv")
+    cancer_drugs = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/regimen_cancer_level_dataset.csv")
     return cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs
 
 cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs = load_data()
