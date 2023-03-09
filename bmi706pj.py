@@ -244,6 +244,7 @@ subset = mut[mut["Sex"] == sex_button]
 
 #Race selectbox
 race_list = list(set(mut['Race'].to_list()))
+race_list = list(set(race_list) - {'Not Applicable', 'Not collected', 'Unknown'})
 race_select = st.selectbox('Race_1', race_list, index=1)
 race_select_2 = st.selectbox('Race_2', race_list, index=1)
 subset_1 = subset[subset["Race"] == race_select]
