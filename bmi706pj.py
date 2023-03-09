@@ -25,10 +25,10 @@ def load_data():
 cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs, mut = load_data()
 
 # Head
-st.write("## Visulization of GENIE BPC NSCLC v2.0-public dataset")
+st.write("# Visulization of GENIE BPC NSCLC v2.0-public dataset")
 
 # Task 1.1
-st.write("# Part 1: Comparing oncologist-assessed progression vs imaging-assessed progression for different drugs")
+st.write("### Part 1: Comparing oncologist-assessed progression vs imaging-assessed progression for different drugs")
 data_1 = cancer_drugs
 df_1 = data_1.dropna(subset = ['tt_pfs_i_g_mos','pfs_i_g_status'])
 df_md_1 = data_1.dropna(subset = ['tt_pfs_m_g_mos', 'pfs_m_g_status'])
@@ -228,7 +228,7 @@ alt_chart_12 = alt.Chart(survival_df).mark_line().encode(
 st.altair_chart(alt_chart_12)
 
 # Part 2
-st.write("# Part 2: Comparing the most frequently mutated genes in patients with different Ethnicity/Race")
+st.write("### Part 2: Comparing the most frequently mutated genes in patients with different Ethnicity/Race")
 
 # a = pd.read_table(r"J:\Download\data_mutations_extended.txt")
 # a = a[a['SIFT_Prediction'] == 'deleterious']
@@ -274,7 +274,7 @@ chart3 = pie + text
 st.altair_chart(chart3)
 
 # task 3
-st.write("# Part 3: Study the survival time and the recurrence rate for patients in the different stages when diagnosed with NSCLC")
+st.write("### Part 3: Study the survival time and the recurrence rate for patients in the different stages when diagnosed with NSCLC")
 
 data = cancer_idx
 df_melted2 = pd.melt(
@@ -353,7 +353,10 @@ alt_chart = alt.Chart(survival_df).mark_line().encode(
     y='survival_prob:Q',
     color=alt.Color('out_type:N', legend=alt.Legend(title='Outcome',
                                                     labelExpr="{'os_dx_status': 'Overall Survival', 'pfs_i_or_m_adv_status': 'Progression-free survival'}[datum.label]"))
-)
+).properties(
+     width=700,
+     height=300,
+     title='K-M curve for patients in the different stages when diagnosed with NSCLC')
 
 alt.data_transformers.enable('default', max_rows=10000)
 
