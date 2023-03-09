@@ -337,8 +337,8 @@ survival_df['stage_dx'] = np.where(survival_df['stage_dx'] == 'Stage I-III NOS',
 #     bind=alt.binding_range(min=0, max=4, step=1,
 #                            name='Select Stage')
 # )
-slider = st.slider([0,1,2,3,4],index = 0)
-survival_df = survival_df[survival_df['stage_dx'].isin(slider)]
+slider = st.slider('Stage',min_value=0, max_value=4, value = 1)
+survival_df = survival_df[survival_df['stage_dx'] == str(slider)]
 
 labels = {
     0: 'Stage I-III NOS',
