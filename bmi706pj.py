@@ -130,7 +130,7 @@ chart_ib = alt.Chart(survival_df_ib).mark_bar(
     alt.Y('count()', stack=None),
     alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
 ).properties(
-     width=50,
+     width=2000,
      height=300,
      title='Frequency of Progression for each Drug')
 
