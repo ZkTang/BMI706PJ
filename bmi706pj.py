@@ -26,6 +26,7 @@ cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer
 
 # Head
 st.write("# Visulization of GENIE BPC NSCLC v2.0-public dataset")
+st.write("###### BMI706,Zhengkuan Tang & Irbaz Riaz")
 
 # Task 1.1
 st.write("### Part 1: Comparing oncologist-assessed progression vs imaging-assessed progression for different drugs")
@@ -54,7 +55,7 @@ for item in all_drug_list:
     d_list = item.split(", ")
     drug_list += d_list
 drug_list = sorted(list(set(drug_list)))
-drugs_multiselect_1 = st.multiselect('Treatments_1', drug_list, default=['Nivolumab'])
+drugs_multiselect_1 = st.multiselect('Treatments_1', drug_list, default=['Carboplatin', 'Pemetrexed Disodium'])
 drugs_multiselect_2 = st.multiselect('Treatments_2', drug_list, default=['Afatinib Dimaleate'])
 drugs_multiselect_3 = st.multiselect('Treatments_3', drug_list, default=['Osimertinib'])
 
@@ -246,7 +247,7 @@ subset = mut[mut["Sex"] == sex_button]
 race_list = list(set(mut['Race'].to_list()))
 race_list = list(set(race_list) - {'Not Applicable', 'Not collected', 'Unknown'})
 race_select = st.selectbox('Race_1', race_list, index=1)
-race_select_2 = st.selectbox('Race_2', race_list, index=1)
+race_select_2 = st.selectbox('Race_2', race_list, index=0)
 subset_1 = subset[subset["Race"] == race_select]
 
 dd_1 = dict(Counter(subset_1['Hugo_Symbol']))
