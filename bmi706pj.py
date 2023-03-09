@@ -258,11 +258,15 @@ gelist = subset['Hugo_Symbol'].tolist()
 gelist_modified = ['Other' if gene not in sig_gene else gene for gene in gelist]
 
 
-base = alt.Chart(subset).encode(
-    theta=alt.Theta("count(Race)", stack=True), color=alt.Color("Gene_modified:N", legend=None)
+cor = dict(Counter(subset['Gene_modified']))
+cor_df = pd.DataFrame.from_dict(cor,orient='index')
+cor_df['Gene'] = cor_df.index
+cor_df.columns = ['Count',"Gene"]
+base = alt.Chart(cor_df).encode(
+    theta=alt.Theta("Count:Q", stack=True), color=alt.Color("Gene:N")
 )
 pie = base.mark_arc(outerRadius=120)
-text = base.mark_text(radius=140, size=20).encode(text="Gene_modified:N")
+text = base.mark_text(radius=140, size=20).encode(text="Gene:N")
 
 chart3 = pie + text
 
