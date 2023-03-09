@@ -242,10 +242,10 @@ st.write("# Part 2: Comparing the most frequently mutated genes in patients with
 sex_button = st.radio('Sex',['Male','Female'], index = 0 )
 subset = mut[mut["Sex"] == sex_button]
 
-# Race selectbox
-# race_list = list(set(mut['Race'].to_list()))
-# race_select = st.selectbox('Race', race_list, index=1)
-# subset = subset[subset["Race"] == race_select]
+#Race selectbox
+race_list = list(set(mut['Race'].to_list()))
+race_select = st.selectbox('Race', race_list, index=1)
+subset = subset[subset["Race"] == race_select]
 
 dd = dict(Counter(mut['Hugo_Symbol']))
 sor_list = sorted(dd.items(), key=lambda x:x[1],reverse=True)
@@ -257,16 +257,14 @@ for s in range(10):
 gelist = subset['Hugo_Symbol'].tolist()
 gelist_modified = ['Other' if gene not in sig_gene else gene for gene in gelist]
 
-subset['Gene_modified'] = gelist_modified
 
-chart3 = alt.Chart(subset).mark_bar().encode(
-    x=alt.X('count(Gene_modified)', stack="normalize"),
-    y='Race:N',
-    color='site'
-).properties(
-     width=700,
-     height=300,
-     title='Most Mutated Genes for each Race')
+base = alt.Chart(subset).encode(
+    theta=alt.Theta("count(Race)", stack=True), color=alt.Color("Gene_modified:N", legend=None)
+)
+pie = base.mark_arc(outerRadius=120)
+text = base.mark_text(radius=140, size=20).encode(text="Gene_modified:N")
+
+chart3 = pie + text
 
 st.altair_chart(chart3)
 
