@@ -147,7 +147,7 @@ chart_ib = alt.Chart(survival_df_ib).mark_bar(
 #     height=300,
 #     title='Frequency of Progression for each Drug'
 # )
-chart_1 = chart_nb | chart_ib
+chart_1 = chart_nb & chart_ib
 st.altair_chart(chart_1)
 
 # # Task 1.2
