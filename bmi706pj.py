@@ -18,15 +18,16 @@ def load_data():
     cancer_path = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/pathology_report_level_dataset.csv")
     cancer_patientlevel = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/patient_level_dataset.csv")
     cancer_drugs = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/regimen_cancer_level_dataset.csv")
+    mut =
     return cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs
 
 cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs = load_data()
 
 # Head
-st.write("## Visulization of GENIE BPC NSCLC v2.0-public dataset",)
-st.write("## http://www.aacr.org/bpc_nsclc")
+st.write("## Visulization of GENIE BPC NSCLC v2.0-public dataset")
 
 # Task 1.1
+st.write("# Part 1: Comparing oncologist-assessed progression vs imaging-assessed progression for different drugs")
 data_1 = cancer_drugs
 df_1 = data_1.dropna(subset = ['tt_pfs_i_g_mos','pfs_i_g_status'])
 df_md_1 = data_1.dropna(subset = ['tt_pfs_m_g_mos', 'pfs_m_g_status'])
@@ -118,7 +119,7 @@ chart_nb = alt.Chart(survival_df_nb).mark_bar(
     alt.Y('count()', stack=None),
     alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
 ).properties(
-     width=1000,
+     width=700,
      height=300,
      title='Time to Progression for each Drug for patients diagnosed by clinicians')
 
@@ -130,7 +131,7 @@ chart_ib = alt.Chart(survival_df_ib).mark_bar(
     alt.Y('count()', stack=None),
     alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
 ).properties(
-     width=1000,
+     width=700,
      height=300,
      title='Time to Progression for each Drug for patients diagnosed by Image')
 
@@ -183,7 +184,7 @@ alt_chart_12 = alt.Chart(survival_df).mark_line().encode(
     y='survival_prob:Q',
     color='drug:N'
 ).properties(
-     width=1000,
+     width=700,
      height=300,
      title='K-M curve for each Treatment')
 
@@ -224,6 +225,16 @@ alt_chart_12 = alt.Chart(survival_df).mark_line().encode(
 # new = alt_chart | alt_chart2
 
 st.altair_chart(alt_chart_12)
+
+# Part 2
+st.write("# Part 2: Comparing the most frequently mutated genes in patients with different Ethnicity/Race")
+
+# a = pd.read_table(r"J:\Download\data_mutations_extended.txt")
+# a = a[a['SIFT_Prediction'] == 'deleterious']
+#
+# p = a[['Tumor_Sample_Barcode', 'Hugo_Symbol']]
+# p.to_csv(r"C:\Users\tangz\Desktop\BMI706PJ\mut.csv")
+
 
 
 
