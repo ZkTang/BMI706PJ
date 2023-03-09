@@ -273,7 +273,93 @@ chart3 = pie + text
 
 st.altair_chart(chart3)
 
+# task 3
+st.write("# Part 3: Study the survival time and the recurrence rate for patients in the different stages when diagnosed with NSCLC")
 
+data = cancer_idx
+df_melted2 = pd.melt(
+    data,
+    id_vars=["record_id", 'stage_dx', 'tt_os_dx_mos', 'tt_pfs_i_or_m_adv_mos'],
+    value_vars=['os_dx_status', 'pfs_i_or_m_adv_status'],
+    var_name="outcome_type",
+    value_name="event_occurred"
+)
 
+# df_melted2["time_till_progression"] = df_melted2['tt_os_dx_mos']
+
+df_melted2["time_till_event"] = df_melted2.apply(
+    lambda x: x["tt_pfs_i_or_m_adv_mos"] if x["outcome_type"] == "pfs_i_or_m_adv_status" else x["tt_os_dx_mos"], axis=1)
+
+df_melted2.drop(["tt_os_dx_mos", "tt_pfs_i_or_m_adv_mos"], axis=1, inplace=True)
+
+df_melted2 = df_melted2.dropna(subset=['event_occurred', 'time_till_event', 'stage_dx'])
+
+from lifelines import KaplanMeierFitter
+
+# Define a list of unique combinations of stage_dx and progression_type
+unique_combinations = [(stage, out_type) for stage in df_melted2['stage_dx'].unique()
+                       for out_type in df_melted2['outcome_type'].unique()]
+
+# Initialize a dictionary to store the fitted Kaplan-Meier models
+kmf_dict = {}
+
+# Loop over the unique combinations of stage_dx and progression_type
+for stage, out_type in unique_combinations:
+
+    # Select the data for the current combination of stage_dx and progression_type
+    mask = (df_melted2['stage_dx'] == stage) & (df_melted2['outcome_type'] == out_type)
+    data = df_melted2.loc[mask, ['time_till_event', 'event_occurred']].dropna()
+
+    # Check if there are enough observations for reliable estimation
+    if len(data) >= 10:
+        # Fit the Kaplan-Meier model and store it in the dictionary
+        kmf = KaplanMeierFitter()
+        kmf.fit(data['time_till_event'], data['event_occurred'], label=f'{stage} ({out_type})')
+        kmf_dict[(stage, out_type)] = kmf
+
+survival_df = pd.DataFrame()
+for (stage, out_type), kmf in kmf_dict.items():
+    mask = (df_melted2['stage_dx'] == stage) & (df_melted2['outcome_type'] == out_type)
+    survival_prob = kmf.survival_function_
+    survival_prob.columns = ['survival_prob']
+    survival_prob['stage_dx'] = stage
+    survival_prob['out_type'] = out_type
+    survival_prob['time'] = survival_prob.index
+    survival_df = pd.concat([survival_df, survival_prob], axis=0)
+
+survival_df['stage_dx'] = np.where(survival_df['stage_dx'] == 'Stage I-III NOS', 0,
+                                   np.where(survival_df['stage_dx'] == 'Stage I', 1,
+                                            np.where(survival_df['stage_dx'] == 'Stage II', 2,
+                                                     np.where(survival_df['stage_dx'] == 'Stage III', 3, 4))))
+
+selection = alt.selection_single(
+    fields=['stage_dx'],
+    bind=alt.binding_range(min=0, max=4, step=1,
+                           name='Select Stage')
+)
+
+labels = {
+    0: 'Stage I-III NOS',
+    1: 'Stage I',
+    2: 'Stage II',
+    3: 'Stage III',
+    4: 'Stage IV'
+}
+
+alt_chart = alt.Chart(survival_df).mark_line().encode(
+    x='time:Q',
+    y='survival_prob:Q',
+    color=alt.Color('out_type:N', legend=alt.Legend(title='Outcome',
+                                                    labelExpr="{'os_dx_status': 'Overall Survival', 'pfs_i_or_m_adv_status': 'Progression-free survival'}[datum.label]"))
+).add_selection(
+    selection
+).transform_filter(
+    selection
+)
+
+alt.data_transformers.enable('default', max_rows=10000)
+
+# display the plot
+st.altair_chart(alt_chart)
 
 
