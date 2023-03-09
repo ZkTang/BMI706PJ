@@ -6,6 +6,7 @@ import sidetable
 import altair as alt
 import lifelines as lf
 import streamlit as st
+from collections import Counter
 
 @st.cache_data
 def load_data():
@@ -18,10 +19,10 @@ def load_data():
     cancer_path = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/pathology_report_level_dataset.csv")
     cancer_patientlevel = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/patient_level_dataset.csv")
     cancer_drugs = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/regimen_cancer_level_dataset.csv")
-    mut =
-    return cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs
+    mut = pd.read_csv(r"https://raw.githubusercontent.com/ZkTang/BMI706PJ/master/mut.csv")
+    return cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs,mut
 
-cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs = load_data()
+cancer_idx, cancer_nonidx, cancer_panel, cancer_imaging, cancer_manifest, cancer_medonc, cancer_path, cancer_patientlevel, cancer_drugs, mut = load_data()
 
 # Head
 st.write("## Visulization of GENIE BPC NSCLC v2.0-public dataset")
@@ -235,7 +236,18 @@ st.write("# Part 2: Comparing the most frequently mutated genes in patients with
 # p = a[['Tumor_Sample_Barcode', 'Hugo_Symbol']]
 # p.to_csv(r"C:\Users\tangz\Desktop\BMI706PJ\mut.csv")
 
+mut = pd.read_csv(r"C:\Users\tangz\Desktop\BMI706PJ\mut.csv")
 
+# Sex Filter
+sex_button = st.radio('Sex',['Male','Female'], index = 0 )
+subset = mut[mut["Sex"] == sex_button]
+
+# Race selectbox
+# race_list = list(set(mut['Race'].to_list()))
+# race_select = st.selectbox('Race', race_list, index=1)
+# subset = subset[subset["Race"] == race_select]
+
+Counter(mut['Hugo_Symbol'])
 
 
 
