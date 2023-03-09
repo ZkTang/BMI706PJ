@@ -57,8 +57,8 @@ drugs_multiselect_2 = st.multiselect('Treatments_2', drug_list, default=['Afatin
 drugs_multiselect_3 = st.multiselect('Treatments_3', drug_list, default=['Osimertinib'])
 
 text_1 = ", ".join(sorted(list(drugs_multiselect_1)))
-text_2 = ", ".join(sorted(list(drugs_multiselect_1)))
-text_3 = ", ".join(sorted(list(drugs_multiselect_1)))
+text_2 = ", ".join(sorted(list(drugs_multiselect_2)))
+text_3 = ", ".join(sorted(list(drugs_multiselect_3)))
 
 drug_allselect = list(set(drugs_multiselect_1 + drugs_multiselect_2 + drugs_multiselect_3))
 
@@ -101,7 +101,7 @@ chart_0 = alt.Chart(survival_df).mark_bar(
 ).encode(
     alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100)),
     alt.Y('count()', stack=None),
-    alt.Color('Drugs:N')
+    alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
 )
 # chart_0 = alt.Chart.from_dict(survival_df).mark_bar().encode(
 #     x = alt.X('progression_occurred:N', axis= None),
