@@ -236,7 +236,7 @@ st.write("# Part 2: Comparing the most frequently mutated genes in patients with
 # p = a[['Tumor_Sample_Barcode', 'Hugo_Symbol']]
 # p.to_csv(r"C:\Users\tangz\Desktop\BMI706PJ\mut.csv")
 
-mut = pd.read_csv(r"C:\Users\tangz\Desktop\BMI706PJ\mut.csv")
+#mut = pd.read_csv(r"C:\Users\tangz\Desktop\BMI706PJ\mut.csv")
 
 # Sex Filter
 sex_button = st.radio('Sex',['Male','Female'], index = 0 )
@@ -247,9 +247,28 @@ subset = mut[mut["Sex"] == sex_button]
 # race_select = st.selectbox('Race', race_list, index=1)
 # subset = subset[subset["Race"] == race_select]
 
-Counter(mut['Hugo_Symbol'])
+dd = dict(Counter(mut['Hugo_Symbol']))
+sor_list = sorted(dd.items(), key=lambda x:x[1],reverse=True)
 
+sig_gene = []
+for s in range(10):
+    sig_gene.append(sor_list[s][0])
 
+gelist = subset['Hugo_Symbol'].tolist()
+gelist_modified = ['Other' if gene not in sig_gene else gene for gene in gelist]
+
+subset['Gene_modified'] = gelist_modified
+
+chart3 = alt.Chart(subset).mark_bar().encode(
+    x=alt.X('count(Gene_modified)', stack="normalize"),
+    y='Race:N',
+    color='site'
+).properties(
+     width=700,
+     height=300,
+     title='Most Mutated Genes for each Race')
+
+st.altair_chart(chart3)
 
 
 
