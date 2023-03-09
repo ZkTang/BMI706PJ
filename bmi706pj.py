@@ -120,7 +120,7 @@ chart_nb = alt.Chart(survival_df_nb).mark_bar(
 ).properties(
      width=1000,
      height=300,
-     title='Frequency of Progression for each Drug')
+     title='Time to Progression for each Drug for patients diagnosed by clinicians')
 
 chart_ib = alt.Chart(survival_df_ib).mark_bar(
     opacity=0.3,
@@ -132,7 +132,7 @@ chart_ib = alt.Chart(survival_df_ib).mark_bar(
 ).properties(
      width=1000,
      height=300,
-     title='Frequency of Progression for each Drug')
+     title='Time to Progression for each Drug for patients diagnosed by Image')
 
 # )
 # chart_0 = alt.Chart.from_dict(survival_df).mark_bar().encode(
@@ -150,80 +150,80 @@ chart_ib = alt.Chart(survival_df_ib).mark_bar(
 chart_1 = chart_nb & chart_ib
 st.altair_chart(chart_1)
 
-# # Task 1.2
-#
-# # create a Kaplan-Meier curves for each drug
-# kmf_dict = {}
-# for drug in df_1['regimen_drugs'].unique():
-#     kmf_dict[drug] = lf.KaplanMeierFitter()
-#     mask = df_1['regimen_drugs'] == drug
-#     kmf_dict[drug].fit(df_1['tt_pfs_i_g_mos'][mask], df_1['pfs_i_g_status'][mask], label=drug)
-#
-# # create a dataframe with the survival probabilities
-# survival_df = pd.DataFrame()
-# for drug, kmf in kmf_dict.items():
-#     survival_prob = kmf.survival_function_
-#     survival_prob.columns = ['survival_prob']
-#     survival_prob['drug'] = drug
-#     survival_prob['time'] = survival_prob.index
-#     survival_df = pd.concat([survival_df, survival_prob], axis=0)
-#
-# # create the Altair plot with a dropdown menu
-# selection = alt.selection_single(
-#     fields=['drug'],
-#     bind=alt.binding_select(options=sorted(list(kmf_dict.keys()))),
-#     name='Select',
-#     init = {'drug': 'Docetaxel'}
-# )
-#
-# alt_chart = alt.Chart(survival_df).mark_line().encode(
-#     x='time:Q',
-#     y='survival_prob:Q',
-#     color='drug:N'
-# ).add_selection(
-#     selection
-# ).transform_filter(
-#     selection
-# )
-#
-# # create a Kaplan-Meier curves for each drug
-# kmf_dict = {}
-# for drug in df_md_1['regimen_drugs'].unique():
-#     kmf_dict[drug] = lf.KaplanMeierFitter()
-#     mask = df_md_1['regimen_drugs'] == drug
-#     kmf_dict[drug].fit(df_md_1['tt_pfs_m_g_mos'][mask], df_md_1['pfs_m_g_status'][mask], label=drug)
-#
-# # create a dataframe with the survival probabilities
-# survival_df = pd.DataFrame()
-# for drug, kmf in kmf_dict.items():
-#     survival_prob = kmf.survival_function_
-#     survival_prob.columns = ['survival_prob']
-#     survival_prob['drug'] = drug
-#     survival_prob['time'] = survival_prob.index
-#     survival_df = pd.concat([survival_df, survival_prob], axis=0)
-#
-# # create the Altair plot with a dropdown menu
-# selection = alt.selection_single(
-#     fields=['drug'],
-#     bind=alt.binding_select(options=sorted(list(kmf_dict.keys()))),
-#     name='Select',
-#     init = {'drug': 'Docetaxel'}
-# )
-#
-# alt_chart2 = alt.Chart(survival_df).mark_line().encode(
-#     x='time:Q',
-#     y='survival_prob:Q',
-#     color='drug:N'
-# ).add_selection(
-#     selection
-# ).transform_filter(
-#     selection
-# )
-#
-# new = alt_chart | alt_chart2
-#
-# st.altair_chart(new)
-#
+# Task 1.2
+
+# create a Kaplan-Meier curves for each drug
+kmf_dict = {}
+for drug in df_1['regimen_drugs'].unique():
+    kmf_dict[drug] = lf.KaplanMeierFitter()
+    mask = df_1['regimen_drugs'] == drug
+    kmf_dict[drug].fit(df_1['tt_pfs_i_g_mos'][mask], df_1['pfs_i_g_status'][mask], label=drug)
+
+# create a dataframe with the survival probabilities
+survival_df = pd.DataFrame()
+for drug, kmf in kmf_dict.items():
+    survival_prob = kmf.survival_function_
+    survival_prob.columns = ['survival_prob']
+    survival_prob['drug'] = drug
+    survival_prob['time'] = survival_prob.index
+    survival_df = pd.concat([survival_df, survival_prob], axis=0)
+
+# create the Altair plot with a dropdown menu
+selection = alt.selection_single(
+    fields=['drug'],
+    bind=alt.binding_select(options=sorted(list(kmf_dict.keys()))),
+    name='Select',
+    init = {'drug': 'Docetaxel'}
+)
+
+alt_chart = alt.Chart(survival_df).mark_line().encode(
+    x='time:Q',
+    y='survival_prob:Q',
+    color='drug:N'
+).add_selection(
+    selection
+).transform_filter(
+    selection
+)
+
+# create a Kaplan-Meier curves for each drug
+kmf_dict = {}
+for drug in df_md_1['regimen_drugs'].unique():
+    kmf_dict[drug] = lf.KaplanMeierFitter()
+    mask = df_md_1['regimen_drugs'] == drug
+    kmf_dict[drug].fit(df_md_1['tt_pfs_m_g_mos'][mask], df_md_1['pfs_m_g_status'][mask], label=drug)
+
+# create a dataframe with the survival probabilities
+survival_df = pd.DataFrame()
+for drug, kmf in kmf_dict.items():
+    survival_prob = kmf.survival_function_
+    survival_prob.columns = ['survival_prob']
+    survival_prob['drug'] = drug
+    survival_prob['time'] = survival_prob.index
+    survival_df = pd.concat([survival_df, survival_prob], axis=0)
+
+# create the Altair plot with a dropdown menu
+selection = alt.selection_single(
+    fields=['drug'],
+    bind=alt.binding_select(options=sorted(list(kmf_dict.keys()))),
+    name='Select',
+    init = {'drug': 'Docetaxel'}
+)
+
+alt_chart2 = alt.Chart(survival_df).mark_line().encode(
+    x='time:Q',
+    y='survival_prob:Q',
+    color='drug:N'
+).add_selection(
+    selection
+).transform_filter(
+    selection
+)
+
+new = alt_chart | alt_chart2
+
+st.altair_chart(new)
+
 
 
 
