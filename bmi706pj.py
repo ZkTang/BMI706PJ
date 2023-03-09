@@ -117,13 +117,13 @@ chart_nb = alt.Chart(survival_df_nb).mark_bar(
     opacity=0.3,
     binSpacing=0
 ).encode(
-    alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100)),
+    alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100),title='Time_to_progression(Months)'),
     alt.Y('count()', stack=None),
     alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
 ).properties(
      width=700,
      height=300,
-     title='Time to Progression for each Drug for patients diagnosed by clinicians')
+     title='Time to Progression for Each Treatment for Patients Diagnosed by Oncologists')
 
 chart_ib = alt.Chart(survival_df_ib).mark_bar(
     opacity=0.3,
@@ -135,7 +135,7 @@ chart_ib = alt.Chart(survival_df_ib).mark_bar(
 ).properties(
      width=700,
      height=300,
-     title='Time to Progression for each Drug for patients diagnosed by Image')
+     title='Time to Progression for Each Treatment for Patients Diagnosed by Image-based Techniques')
 
 # )
 # chart_0 = alt.Chart.from_dict(survival_df).mark_bar().encode(
@@ -188,7 +188,7 @@ alt_chart_12 = alt.Chart(survival_df).mark_line().encode(
 ).properties(
      width=700,
      height=300,
-     title='K-M curve for each Treatment')
+     title='K-M Curve for Each Treatment')
 
 # # create a Kaplan-Meier curves for each drug
 # kmf_dict = {}
@@ -229,7 +229,7 @@ alt_chart_12 = alt.Chart(survival_df).mark_line().encode(
 st.altair_chart(alt_chart_12)
 
 # Part 2
-st.write("### Part 2: Comparing the most frequently mutated genes in patients with different Ethnicity/Race")
+st.write("### Part 2: Comparing the Most Frequently Mutated Genes in Patients with Different Race Background")
 
 # a = pd.read_table(r"J:\Download\data_mutations_extended.txt")
 # a = a[a['SIFT_Prediction'] == 'deleterious']
@@ -268,7 +268,8 @@ cor_df_1.columns = ['Count',"Gene"]
 cor_df_1 = cor_df_1.drop(index='Other')
 base_1 = alt.Chart(cor_df_1).encode(
     theta=alt.Theta("Count:Q", stack=True), color=alt.Color("Gene:N")
-)
+).properties(
+     title='Top 10 Mutated Genes for Race: ' + str(race_select) )
 pie_1 = base_1.mark_arc(outerRadius=120)
 text_1 = base_1.mark_text(radius=140, size=20).encode(text="Gene:N")
 
@@ -295,7 +296,8 @@ cor_df.columns = ['Count',"Gene"]
 cor_df = cor_df.drop(index='Other')
 base = alt.Chart(cor_df).encode(
     theta=alt.Theta("Count:Q", stack=True), color=alt.Color("Gene:N")
-)
+).properties(
+     title='Top 10 Mutated Genes for Race: ' + str(race_select_2) )
 pie = base.mark_arc(outerRadius=120)
 text = base.mark_text(radius=140, size=20).encode(text="Gene:N")
 
@@ -314,7 +316,7 @@ for genes in genelist_total:
     st.write(text_hy)
 
 # task 3
-st.write("### Part 3: Study the survival time and the recurrence rate for patients in the different stages when diagnosed with NSCLC")
+st.write("### Part 3: Study the Survival Curve for Patients in the Different Stages when Diagnosed with NSCLC")
 
 data = cancer_idx
 df_melted2 = pd.melt(
@@ -396,7 +398,7 @@ alt_chart = alt.Chart(survival_df).mark_line().encode(
 ).properties(
      width=700,
      height=300,
-     title='K-M curve for patients in the different stages when diagnosed with NSCLC')
+     title='K-M curve for Patients in the Different Stages when Diagnosed with NSCLC')
 
 alt.data_transformers.enable('default', max_rows=10000)
 
