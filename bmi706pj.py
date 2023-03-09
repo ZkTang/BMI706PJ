@@ -303,6 +303,15 @@ chart_all = chart3 | chart4
 
 st.altair_chart(chart_all)
 
+genelist_total = set(cor_df['Gene'].tolist() + cor_df_1['Gene'].tolist())
+
+text_w = 'There are ' + str(len(genelist_total)) + " genes on the top 10:"
+st.write("#### "+ text_w)
+
+for genes in genelist_total:
+    text_hy = str(genes) + ' : ' + '[Genecard](https://www.genecards.org/cgi-bin/carddisp.pl?gene=' + str(genes)
+    st.write(text_hy)
+
 # task 3
 st.write("### Part 3: Study the survival time and the recurrence rate for patients in the different stages when diagnosed with NSCLC")
 
