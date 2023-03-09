@@ -257,7 +257,7 @@ for s in range(10):
 gelist = subset['Hugo_Symbol'].tolist()
 gelist_modified = ['Other' if gene not in sig_gene else gene for gene in gelist]
 
-
+subset['Gene_modified'] = gelist_modified
 cor = dict(Counter(subset['Gene_modified']))
 cor_df = pd.DataFrame.from_dict(cor,orient='index')
 cor_df['Gene'] = cor_df.index
