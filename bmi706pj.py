@@ -184,7 +184,7 @@ survival_df = survival_df[survival_df['drug'].isin(text_st)]
 alt_chart_12 = alt.Chart(survival_df).mark_line().encode(
     x=alt.X('time:Q',title = 'Time (Months)'),
     y=alt.Y('survival_prob:Q', title='Survival Prob.'),
-    color=alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
+    color='Drugs:N'
 ).properties(
      width=700,
      height=300,
