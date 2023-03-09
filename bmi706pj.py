@@ -332,11 +332,13 @@ survival_df['stage_dx'] = np.where(survival_df['stage_dx'] == 'Stage I-III NOS',
                                             np.where(survival_df['stage_dx'] == 'Stage II', 2,
                                                      np.where(survival_df['stage_dx'] == 'Stage III', 3, 4))))
 
-selection = alt.selection_single(
-    fields=['stage_dx'],
-    bind=alt.binding_range(min=0, max=4, step=1,
-                           name='Select Stage')
-)
+# selection = alt.selection_single(
+#     fields=['stage_dx'],
+#     bind=alt.binding_range(min=0, max=4, step=1,
+#                            name='Select Stage')
+# )
+slider = st.slider([0,1,2,3,4],index = 0)
+survival_df = survival_df[survival_df['stage_dx'].isin(slider)]
 
 labels = {
     0: 'Stage I-III NOS',
