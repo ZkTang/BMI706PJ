@@ -88,14 +88,14 @@ for treatment in text_st:
     temp_years = df_melted_1[df_melted_1["regimen_drugs"] == treatment]
     temp_year_list = temp_years['time_till_progression'].tolist()
     survival_dict[treatment] = temp_year_list
-survival_df = pd.DataFrame(columns=text_st, index=[p for p in range(5000)])
+survival_df = pd.DataFrame(columns=['Drugs', 'Time_to_progression'])
+lo = 0
 for name in text_st:
-    survival_df[name] = survival_dict[name] + ['' for g in range((5000-len(survival_dict[name])))]
+    for it in survival_dict[name]:
+        survival_df.loc[lo] = [name,it]
+        lo += 1
 
-chart_0 = alt.Chart(survival_df).transform_fold(
-    text_st,
-    as_=['Drugs', 'Time_to_progression']
-).mark_bar(
+chart_0 = alt.Chart(survival_df).mark_bar(
     opacity=0.3,
     binSpacing=0
 ).encode(
