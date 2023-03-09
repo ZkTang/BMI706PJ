@@ -262,6 +262,7 @@ cor = dict(Counter(subset['Gene_modified']))
 cor_df = pd.DataFrame.from_dict(cor,orient='index')
 cor_df['Gene'] = cor_df.index
 cor_df.columns = ['Count',"Gene"]
+cor_df = cor_df.drop(index='Other')
 base = alt.Chart(cor_df).encode(
     theta=alt.Theta("Count:Q", stack=True), color=alt.Color("Gene:N")
 )
