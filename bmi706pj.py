@@ -117,7 +117,7 @@ chart_nb = alt.Chart(survival_df_nb).mark_bar(
     opacity=0.3,
     binSpacing=0
 ).encode(
-    alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100),title='Time_to_progression(Months)'),
+    alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100),title='Time to Progression (Months)'),
     alt.Y('count()', stack=None),
     alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
 ).properties(
@@ -129,7 +129,7 @@ chart_ib = alt.Chart(survival_df_ib).mark_bar(
     opacity=0.3,
     binSpacing=0
 ).encode(
-    alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100)),
+    alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100),title='Time to Progression (Months)'),
     alt.Y('count()', stack=None),
     alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
 ).properties(
@@ -182,9 +182,9 @@ selection = alt.selection_single(
 survival_df = survival_df[survival_df['drug'].isin(text_st)]
 
 alt_chart_12 = alt.Chart(survival_df).mark_line().encode(
-    x='time:Q',
-    y='survival_prob:Q',
-    color='drug:N'
+    x=alt.X('time:Q',title = 'Time (Months)'),
+    y=alt.Y('survival_prob:Q', title='Survival Prob.'),
+    color=alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
 ).properties(
      width=700,
      height=300,
@@ -247,7 +247,7 @@ subset = mut[mut["Sex"] == sex_button]
 race_list = list(set(mut['Race'].to_list()))
 race_list = list(set(race_list) - {'Not Applicable', 'Not collected', 'Unknown'})
 race_select = st.selectbox('Race_1', race_list, index=1)
-race_select_2 = st.selectbox('Race_2', race_list, index=0)
+race_select_2 = st.selectbox('Race_2', race_list, index=3)
 subset_1 = subset[subset["Race"] == race_select]
 
 dd_1 = dict(Counter(subset_1['Hugo_Symbol']))
@@ -391,8 +391,8 @@ labels = {
 }
 
 alt_chart = alt.Chart(survival_df).mark_line().encode(
-    x='time:Q',
-    y='survival_prob:Q',
+    x=alt.X('time:Q', title='Time (Months)'),
+    y=alt.Y('survival_prob:Q', title='Survival Prob.'),
     color=alt.Color('out_type:N', legend=alt.Legend(title='Outcome',
                                                     labelExpr="{'os_dx_status': 'Overall Survival', 'pfs_i_or_m_adv_status': 'Progression-free survival'}[datum.label]"))
 ).properties(
