@@ -353,10 +353,6 @@ alt_chart = alt.Chart(survival_df).mark_line().encode(
     y='survival_prob:Q',
     color=alt.Color('out_type:N', legend=alt.Legend(title='Outcome',
                                                     labelExpr="{'os_dx_status': 'Overall Survival', 'pfs_i_or_m_adv_status': 'Progression-free survival'}[datum.label]"))
-).add_selection(
-    selection
-).transform_filter(
-    selection
 )
 
 alt.data_transformers.enable('default', max_rows=10000)
