@@ -83,26 +83,58 @@ drug_options = sorted(df_melted_1['regimen_drugs'].unique())
 #      init={'regimen_drugs': 'Docetaxel'}
 # )
 
-survival_dict = {}
+survival_dict_nb = {}
+survival_dict_ib = {}
+df_melted_1_nb = df_melted_1[df_melted_1["progression_type"] == 'Notes Based']
+df_melted_1_ib = df_melted_1[df_melted_1["progression_type"] == 'Imaging Based']
 for treatment in text_st:
-    temp_years = df_melted_1[df_melted_1["regimen_drugs"] == treatment]
+    temp_years = df_melted_1_nb[df_melted_1_nb["regimen_drugs"] == treatment]
     temp_year_list = temp_years['time_till_progression'].tolist()
-    survival_dict[treatment] = temp_year_list
-survival_df = pd.DataFrame(columns=['Drugs', 'Time_to_progression'])
+    survival_dict_nb[treatment] = temp_year_list
+survival_df_nb = pd.DataFrame(columns=['Drugs', 'Time_to_progression'])
 lo = 0
 for name in text_st:
-    for it in survival_dict[name]:
-        survival_df.loc[lo] = [name,it]
+    for it in survival_dict_nb[name]:
+        survival_df_nb.loc[lo] = [name,it]
         lo += 1
 
-chart_0 = alt.Chart(survival_df).mark_bar(
+
+for treatment in text_st:
+    temp_years = df_melted_1_ib[df_melted_1_ib["regimen_drugs"] == treatment]
+    temp_year_list = temp_years['time_till_progression'].tolist()
+    survival_dict_ib[treatment] = temp_year_list
+survival_df_ib = pd.DataFrame(columns=['Drugs', 'Time_to_progression'])
+lo = 0
+for name in text_st:
+    for it in survival_dict_ib[name]:
+        survival_df_ib.loc[lo] = [name,it]
+        lo += 1
+
+chart_nb = alt.Chart(survival_df_nb).mark_bar(
     opacity=0.3,
     binSpacing=0
 ).encode(
     alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100)),
     alt.Y('count()', stack=None),
     alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
-)
+).properties(
+     width=50,
+     height=300,
+     title='Frequency of Progression for each Drug')
+
+chart_ib = alt.Chart(survival_df_ib).mark_bar(
+    opacity=0.3,
+    binSpacing=0
+).encode(
+    alt.X('Time_to_progression:Q', bin=alt.Bin(maxbins=100)),
+    alt.Y('count()', stack=None),
+    alt.Color('Drugs:N', legend=alt.Legend(title='Treatment'))
+).properties(
+     width=50,
+     height=300,
+     title='Frequency of Progression for each Drug')
+
+# )
 # chart_0 = alt.Chart.from_dict(survival_df).mark_bar().encode(
 #     x = alt.X('progression_occurred:N', axis= None),
 #     y = alt.Y('count():Q', axis=alt.Axis(grid=True)),
@@ -115,8 +147,8 @@ chart_0 = alt.Chart(survival_df).mark_bar(
 #     height=300,
 #     title='Frequency of Progression for each Drug'
 # )
-
-st.altair_chart(chart_0)
+chart_1 = chart_nb | chart_ib
+st.altair_chart(chart_1)
 
 # # Task 1.2
 #
