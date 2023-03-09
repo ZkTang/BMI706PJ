@@ -309,7 +309,7 @@ text_w = 'There are ' + str(len(genelist_total)) + " genes on the top 10:"
 st.write("#### "+ text_w)
 
 for genes in genelist_total:
-    text_hy = str(genes) + ' : ' + '[Genecard](https://www.genecards.org/cgi-bin/carddisp.pl?gene=' + str(genes)
+    text_hy = str(genes) + ' : ' + '[Genecard](https://www.genecards.org/cgi-bin/carddisp.pl?gene=' + str(genes) + ')'
     st.write(text_hy)
 
 # task 3
