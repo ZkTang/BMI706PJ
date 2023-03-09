@@ -52,9 +52,9 @@ for item in all_drug_list:
     d_list = item.split(", ")
     drug_list += d_list
 drug_list = sorted(list(set(drug_list)))
-drugs_multiselect_1 = st.multiselect('Treatments_1', drug_list, default=['Carboplatin'])
-drugs_multiselect_2 = st.multiselect('Treatments_2', drug_list, default=['Carboplatin', 'Paclitaxel', 'Pembrolizumab'])
-drugs_multiselect_3 = st.multiselect('Treatments_3', drug_list, default=['Cisplatin'])
+drugs_multiselect_1 = st.multiselect('Treatments_1', drug_list, default=['Nivolumab'])
+drugs_multiselect_2 = st.multiselect('Treatments_2', drug_list, default=['Afatinib Dimaleate'])
+drugs_multiselect_3 = st.multiselect('Treatments_3', drug_list, default=['Osimertinib'])
 
 text_1 = ", ".join(sorted(list(drugs_multiselect_1)))
 text_2 = ", ".join(sorted(list(drugs_multiselect_1)))
