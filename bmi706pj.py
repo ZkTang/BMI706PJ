@@ -244,10 +244,38 @@ subset = mut[mut["Sex"] == sex_button]
 
 #Race selectbox
 race_list = list(set(mut['Race'].to_list()))
-race_select = st.selectbox('Race', race_list, index=1)
-subset = subset[subset["Race"] == race_select]
+race_select = st.selectbox('Race_1', race_list, index=1)
+race_select_2 = st.selectbox('Race_2', race_list, index=1)
+subset_1 = subset[subset["Race"] == race_select]
 
-dd = dict(Counter(mut['Hugo_Symbol']))
+dd_1 = dict(Counter(subset_1['Hugo_Symbol']))
+sor_list_1 = sorted(dd_1.items(), key=lambda x:x[1],reverse=True)
+
+sig_gene_1 = []
+for s in range(10):
+    sig_gene_1.append(sor_list_1[s][0])
+
+gelist_1 = subset_1['Hugo_Symbol'].tolist()
+gelist_modified_1 = ['Other' if gene not in sig_gene_1 else gene for gene in gelist_1]
+
+subset_1['Gene_modified'] = gelist_modified_1
+cor_1 = dict(Counter(subset_1['Gene_modified']))
+cor_df_1 = pd.DataFrame.from_dict(cor_1,orient='index')
+cor_df_1['Gene'] = cor_df_1.index
+cor_df_1.columns = ['Count',"Gene"]
+cor_df_1 = cor_df_1.drop(index='Other')
+base_1 = alt.Chart(cor_df_1).encode(
+    theta=alt.Theta("Count:Q", stack=True), color=alt.Color("Gene:N")
+)
+pie_1 = base_1.mark_arc(outerRadius=120)
+text_1 = base_1.mark_text(radius=140, size=20).encode(text="Gene:N")
+
+chart3 = pie_1 + text_1
+
+#Race selectbox
+subset = subset[subset["Race"] == race_select_2]
+
+dd = dict(Counter(subset['Hugo_Symbol']))
 sor_list = sorted(dd.items(), key=lambda x:x[1],reverse=True)
 
 sig_gene = []
@@ -269,9 +297,10 @@ base = alt.Chart(cor_df).encode(
 pie = base.mark_arc(outerRadius=120)
 text = base.mark_text(radius=140, size=20).encode(text="Gene:N")
 
-chart3 = pie + text
+chart4 = pie + text
+chart_all = chart3 | chart4
 
-st.altair_chart(chart3)
+st.altair_chart(chart_all)
 
 # task 3
 st.write("### Part 3: Study the survival time and the recurrence rate for patients in the different stages when diagnosed with NSCLC")
